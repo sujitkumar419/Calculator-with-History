@@ -1,0 +1,43 @@
+import os
+
+HISTORY_FILE = "history.txt"
+
+def save(equation, result):
+    with open(HISTORY_FILE, 'a') as f:
+        f.write(f"{equation} = {result}\n")
+
+def show():
+    if not os.path.exists(HISTORY_FILE): 
+        print("No history"); return
+    with open(HISTORY_FILE) as f:
+        data = f.read().strip()
+        print(data if data else "No history")
+
+def clear():
+    open(HISTORY_FILE, 'w').close()
+    print("History cleared")
+
+def calc_multi(user_input):
+    for expr in user_input.split(","):
+        try:
+            num1, op, num2 = expr.strip().split()
+            num1, num2 = int(num1), int(num2)   # direct integer input
+            if op == "+": res = num1 + num2
+            elif op == "-": res = num1 - num2
+            elif op == "*": res = num1 * num2
+            elif op == "/": 
+                if num2 == 0: print("Error: Division by zero"); continue
+                res = num1 // num2   # integer division
+            else: print("Invalid operator"); continue
+            print(f"{expr.strip()} = {res}")
+            save(expr.strip(), res)
+        except: 
+            print(f"Invalid: {expr.strip()}")
+
+while True:
+    print("\n1.Calculate  2.Show  3.Clear  4.Exit")
+    ch = input("Choice: ")
+    if ch=="1": calc_multi(input("Enter (comma separated): "))
+    elif ch=="2": show()
+    elif ch=="3": clear()
+    elif ch=="4": break
